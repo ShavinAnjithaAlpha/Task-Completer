@@ -3,3 +3,10 @@ __pycache__/
 
 *.log
 *.*cpython*
+
+# database files and folders
+db/
+*.db
+
+# env files
+venv/

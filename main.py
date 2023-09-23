@@ -1,8 +1,12 @@
-import sys, os, json, style_sheet
+import sys
+import os
+import json
+import style_sheet
 from PyQt5.QtWidgets import (QApplication, QWidget, QCheckBox, QLineEdit, QPushButton, QLabel, QHBoxLayout,
                              QVBoxLayout, QFrame, QInputDialog, QScrollArea, QGridLayout, QMessageBox)
 from PyQt5.QtCore import QSize, Qt, QDate, QTime, pyqtSignal
 from PyQt5.QtGui import QColor, QFont, QPalette
+
 
 class TaskWidget(QWidget):
 
@@ -40,13 +44,16 @@ class TaskWidget(QWidget):
         self.drop_down_button.pressed.connect(self.show)
 
         # create the date and time label
-        self.generate_date_time_label = QLabel(f"Generate on {self.task_data['init_date']} \n at the {self.task_data['init_time']}")
+        self.generate_date_time_label = QLabel(
+            f"Generate on {self.task_data['init_date']} \n at the {self.task_data['init_time']}")
         self.generate_date_time_label.setVisible(False)
         self.generate_date_time_label.setFont(QFont("Helvetica", 10))
-        self.generate_date_time_label.setStyleSheet("color : rgb(100, 100, 100)")
+        self.generate_date_time_label.setStyleSheet(
+            "color : rgb(100, 100, 100)")
 
         if ("end_date" in self.task_data.keys() and "end_time" in self.task_data.keys()):
-            self.ended_date_time_label = QLabel(f"Task completed on {self.task_data['end_date']} \n at {self.task_data['end_time']}")
+            self.ended_date_time_label = QLabel(
+                f"Task completed on {self.task_data['end_date']} \n at {self.task_data['end_time']}")
         else:
             self.ended_date_time_label = QLabel("Task Not Complete")
 
@@ -126,7 +133,7 @@ class TaskWidget(QWidget):
 
         self.drop_down_button.setVisible(True)
 
-    def changeState(self, boolValue : bool):
+    def changeState(self, boolValue: bool):
 
         # changed the check box state
         self.state_box.setCheckState(boolValue)
@@ -144,7 +151,8 @@ class TaskWidget(QWidget):
                     item["end_date"] = QDate.currentDate().toString()
                     item["end_time"] = QTime.currentTime().toString()
 
-                    self.ended_date_time_label.setText(f"Task completed on {item['end_date']} at {item['end_time']}")
+                    self.ended_date_time_label.setText(
+                        f"Task completed on {item['end_date']} at {item['end_time']}")
                 break
 
         # write to the json file again
@@ -167,7 +175,8 @@ class TaskWidget(QWidget):
 
         # change the task widget text
         # first get the changed text for the widget
-        text , ok = QInputDialog.getText(self, "Changes Text", "Enter the your changes text below : ")
+        text, ok = QInputDialog.getText(
+            self, "Changes Text", "Enter the your changes text below : ")
 
         if ok:
             # change the task widget text and change the user data
@@ -187,6 +196,7 @@ class TaskWidget(QWidget):
             # change the label text
             self.setLabelText(text)
 
+
 class TaskCompleter(QWidget):
     def __init__(self):
         super(TaskCompleter, self).__init__()
@@ -196,7 +206,7 @@ class TaskCompleter(QWidget):
 
         user_data = []
         if not os.path.exists("db"):
-        	os.makedirs("db/")
+            os.makedirs("db/")
 
         if not (os.path.exists("db/user_data.json")):
             # create the new json file to store the user data
@@ -224,7 +234,7 @@ class TaskCompleter(QWidget):
         title_label.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         title_label.setObjectName("titleLabel")
 
-        author_label  =QLabel("developed by Shavin Anjitha \n on 2021-06-10")
+        author_label = QLabel("developed by Shavin Anjitha \n on 2021-06-10")
         author_label.setFont(QFont("verdana", 10))
         author_label.setStyleSheet("color : rgb(70, 70, 70)")
 
@@ -258,8 +268,10 @@ class TaskCompleter(QWidget):
         scroll_area.setObjectName("main_widget")
         scroll_area.setWidgetResizable(True)
         scroll_area.setWidget(self.taskFrame)
-        scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        scroll_area.setVerticalScrollBarPolicy(
+            Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        scroll_area.setHorizontalScrollBarPolicy(
+            Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         # create the layout for set to the frame
         self.widget_lyt = QVBoxLayout()
         self.widget_lyt.setSpacing(0)
@@ -274,7 +286,6 @@ class TaskCompleter(QWidget):
         button_layout.addWidget(self.removeButton)
         button_layout.addWidget(self.deleteAllButton)
         button_layout.addStretch()
-
 
         # create the v box for pack the all of widgets
         v_box = QVBoxLayout()
@@ -326,7 +337,7 @@ class TaskCompleter(QWidget):
         self.info_lyt.setVerticalSpacing(5)
 
         for i, label in enumerate([*title_list, *self.value_label]):
-            self.info_lyt.addWidget(label, i//3, i%3)
+            self.info_lyt.addWidget(label, i//3, i % 3)
             self.info_lyt.setAlignment(label, Qt.AlignmentFlag.AlignCenter)
 
         self.information_tab.setLayout(self.info_lyt)
@@ -341,24 +352,28 @@ class TaskCompleter(QWidget):
         for item in user_data:
             # create the Task Widget and add to the layout
             new_task_widget = TaskWidget(item)
-            new_task_widget.clicked_signal.connect(lambda e=new_task_widget : self.clickedWidget(e))
+            new_task_widget.clicked_signal.connect(
+                lambda e=new_task_widget: self.clickedWidget(e))
             new_task_widget.state_signal.connect(self.changeValue)
             # append to the list of widgets
             self.taskWidget_list.append(new_task_widget)
             # adf to the layout
             self.widget_lyt.insertWidget(0, new_task_widget)
 
-
     def createNewTask(self):
 
         # first ask the task tex from the user
-        text, ok = QInputDialog.getText(self, "Add Task", "Enter Your Task below as the Plain text : ")
+        text, ok = QInputDialog.getText(
+            self, "Add Task", "Enter Your Task below as the Plain text : ")
 
         if ok:
             # create the new task widget
-            current_date, current_time = QDate.currentDate().toString() , QTime.currentTime().toString()
-            new_widget = TaskWidget({"text" : text, "state" : False , "init_date" : current_date , "init_time" : current_time})
-            new_widget.clicked_signal.connect(lambda e=new_widget : self.clickedWidget(e))
+            current_date, current_time = QDate.currentDate(
+            ).toString(), QTime.currentTime().toString()
+            new_widget = TaskWidget(
+                {"text": text, "state": False, "init_date": current_date, "init_time": current_time})
+            new_widget.clicked_signal.connect(
+                lambda e=new_widget: self.clickedWidget(e))
             new_widget.state_signal.connect(self.changeValue)
             # add to the widget list
             self.taskWidget_list.append(new_widget)
@@ -366,12 +381,15 @@ class TaskCompleter(QWidget):
             self.widget_lyt.insertWidget(0, new_widget)
 
             # change the value labels text
-            self.value_label[2].setText(str(int(self.value_label[2].text()) + 1))
-            self.value_label[0].setText(str(int(self.value_label[0].text()) + 1))
+            self.value_label[2].setText(
+                str(int(self.value_label[2].text()) + 1))
+            self.value_label[0].setText(
+                str(int(self.value_label[0].text()) + 1))
 
     def removeTask(self):
 
-        warning =  QMessageBox.warning(self, "Remove Task Warning", "do you want to remove this task?", QMessageBox.StandardButton.Yes|QMessageBox.StandardButton.No)
+        warning = QMessageBox.warning(self, "Remove Task Warning", "do you want to remove this task?",
+                                      QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
 
         if self.currentSelect_widget != None and warning == QMessageBox.StandardButton.Yes:
 
@@ -389,11 +407,14 @@ class TaskCompleter(QWidget):
                 json.dump(new_user_data, file, indent=4)
 
             # changed the value labels text
-            self.value_label[2].setText(str(int(self.value_label[2].text()) - 1))
+            self.value_label[2].setText(
+                str(int(self.value_label[2].text()) - 1))
             if self.currentSelect_widget.task_data["state"]:
-                self.value_label[1].setText(str(int(self.value_label[1].text()) - 1))
+                self.value_label[1].setText(
+                    str(int(self.value_label[1].text()) - 1))
             else:
-                self.value_label[0].setText(str(int(self.value_label[0].text()) - 1))
+                self.value_label[0].setText(
+                    str(int(self.value_label[0].text()) - 1))
 
             # delete the selected task widget from the widget list
             self.taskWidget_list.remove(self.currentSelect_widget)
@@ -401,7 +422,7 @@ class TaskCompleter(QWidget):
 
             self.currentSelect_widget = None
 
-    def clickedWidget(self, widget : TaskWidget):
+    def clickedWidget(self, widget: TaskWidget):
 
         self.currentSelect_widget = widget
 
@@ -416,16 +437,21 @@ class TaskCompleter(QWidget):
 
         if bool:
             # change the label values
-            self.value_label[0].setText(str(int(self.value_label[0].text()) - 1))
-            self.value_label[1].setText(str(int(self.value_label[1].text()) + 1))
+            self.value_label[0].setText(
+                str(int(self.value_label[0].text()) - 1))
+            self.value_label[1].setText(
+                str(int(self.value_label[1].text()) + 1))
         else:
             # change the label values
-            self.value_label[0].setText(str(int(self.value_label[0].text()) + 1))
-            self.value_label[1].setText(str(int(self.value_label[1].text()) - 1))
+            self.value_label[0].setText(
+                str(int(self.value_label[0].text()) + 1))
+            self.value_label[1].setText(
+                str(int(self.value_label[1].text()) - 1))
 
     def removeAll(self):
 
-        message = QMessageBox.warning(self, "Delete All Tasks Warning", "Are you sure want to delete all of tasks?", QMessageBox.StandardButton.Yes|QMessageBox.StandardButton.No)
+        message = QMessageBox.warning(self, "Delete All Tasks Warning", "Are you sure want to delete all of tasks?",
+                                      QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         if message == QMessageBox.StandardButton.Yes:
             # delete the all widget of the window
             for widget in self.taskWidget_list:
